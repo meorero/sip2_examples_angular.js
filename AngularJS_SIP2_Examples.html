@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<!-- http://stackoverflow.com/questions/21524387/angularjs-vs-ie-8-vs-ie-11 -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+<head>
+
+<!--   
+
+http://www.aspsnippets.com/Articles/AngularJS-Get-selected-Text-and-Value-of-HTML-Select-DropDownList-using-ng-change.aspx
+
+
+
+  -->
+ 
+<title>SIP2 Message selector</title>
+
+<style>
+body { 
+    background-color: linen; 
+}
+
+h1 { 
+    color: maroon; 
+    margin-left: 40px; 
+} 
+
+/* Browser specific (not valid) styles to make preformatted text wrap */		
+
+code, pre {
+ background-color: #FFFFCC; 
+ display: inline-block; 
+ white-space: pre-wrap;       /* css-3 */
+ white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+ white-space: -pre-wrap;      /* Opera 4-6 */
+ white-space: -o-pre-wrap;    /* Opera 7 */
+ word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+</style>
+</head>
+
+<body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+
+<h1>SIP2 Messages Examples</h1>
+<script type="text/javascript">
+var app = angular.module('app',[]);
+app.controller('sip2_controller',function($scope){ 
+   $scope.messages = [
+	    {Id:'23', Name:'23 Patron Status Request' }, 
+	    {Id:'11', Name:'11 CheckOut'              },  
+	    {Id:'09', Name:'09 CheckIn'               }, 
+	    {Id:'01', Name:'01 Block Patron'          }, 
+	    {Id:'99', Name:'99 SC Status'             }, 
+	    {Id:'97', Name:'97 SC Request ACS Resend' }, 
+   		{Id:'93', Name:'93 Login'                 }, 
+    	{Id:'63', Name:'63 Patron Information'    }, 
+	    {Id:'35', Name:'35 End Patron Session'    }, 
+   		{Id:'37', Name:'37 Fee Paid'              }, 
+    	{Id:'17', Name:'17 Item Information'      }, 
+	    {Id:'19', Name:'19 Item Status Update'    }, 
+   		{Id:'25', Name:'25 Patron Enable'         }, 
+    	{Id:'15', Name:'15 Hold'                  }, 
+	    {Id:'29', Name:'29 Renew'                 }, 
+	    {Id:'65', Name:'65 Renew all'             } 
+   ]
+});
+</script>
+
+
+<!-- 
+http://www.undefinednull.com/2014/08/11/a-brief-walk-through-of-the-ng-options-in-angularjs/
+-->
+    <div ng-controller="sip2_controller">
+ 	  Please select a message: 
+	  <select ng-model="message" ng-options="message.Name for message in messages">
+      </select>
+	  <p>Selected message is : {{message.Id}} <span><code style="color: DarkBlue;">{{message.Name}}</code></span></p>
+	  
+	  <!-- 99 -->
+	  <p ng-if="message.Id == 99">
+	      <span style="background-color: CCFFFF; color:blue; ">Example for message "{{message.Id}}": 
+		  <code style="color: DarkBlue; border: 2px solid; border-radius: 7px;">{{message.Id}}    </code>
+	  </p>
+	  <div ng-switch on="message.Id">
+	      
+		  
+		  <!-- 23 -->
+		  <div ng-switch-when="23"> 
+		  23 - <b>Patron Status Request</b><br />
+		  Schema for: &lt;23&gt; - Patron Status Request:  <pre>23&lt;language&gt;&lt;transaction date&gt;&lt;institution id&gt;&lt;patron identifier&gt;&lt;terminal password&gt;&lt;patron password&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>...</pre>
+		  </div>
+		  
+		  <!-- 11 -->
+		  <div ng-switch-when="11"> 
+		  11 - <b>Checkout</b> (a <i><b>Loan</b></i> in terms of Aleph) <br />
+		  Schema for: &lt;11&gt; - Checkout:  <pre>11&lt;SC renewal policy&gt;&lt;no block&gt;&lt;transaction date&gt;&lt;nb due date&gt;&lt;institution id&gt;&lt;patron identifier&gt;&lt;item identifier&gt;&lt;terminal password&gt;&lt;patron password&gt;&lt;item properties&gt;&lt;fee acknowledged&gt;&lt;cancel&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>11Y|N|20150101    143026|20160101    093026|AOUSM50|AA1930|ABB48842|AC|CH|AD1930|BON|BIN|</pre>
+		  </div>
+		  
+		  <!-- 09 -->
+		  <div ng-switch-when="09"> 
+		  09 - <b>Checkin</b> (a <i><b>Return</b></i> in terms of Aleph) <br />
+		  Schema for: &lt;09&gt; - Checkout:  <pre>09&lt;no block&gt;&lt;transaction date&gt;&lt;return date&gt;&lt;current location&gt;&lt;institution id&gt;&lt;item identifier&gt;&lt;terminal password&gt;&lt;item properties&gt;&lt;cancel&gt;</pre> 
+		  <br />
+		  Example: <br /> <pre>09Y20150106    09320520100808    093205AP|AO|ABB48842|AC|AY2AZF1F1</pre>
+		  </div>
+		  
+		  <!-- 01 -->
+		  <div ng-switch-when="01"> 
+		  01 - <b>Block Patron</b><br />
+		  Schema for: &lt;01&gt; - Block Patron:  <pre>01&lt;card retained&gt;&lt;transaction date&gt;&lt;institution id&gt;&lt;blocked card msg&gt;&lt;patron identifier&gt;&lt;terminal password&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>01Y20150721    091353AOUSM50|ALBlocked Card MSG|AA1908|AC|AY2AZF02F</pre>
+		  </div>
+		  
+		  <!-- 99 -->
+		  <div ng-switch-when="99"> 
+		  99 - <b>SC Status</b><br />
+		  Schema for: &lt;99&gt; - &lt;<code>SC Status</code>&gt; is just ... '<code>99</code>' :). 
+		  </div>
+		  
+		  <!-- 97 -->
+		  <div ng-switch-when="97"> 
+		  97 - <b>Request ACS Resend</b><br />
+		  Schema for: &lt;99&gt; - &lt;<code>SC Status</code>&gt; is just ... '<code>97</code>' ... :). 
+		  </div>
+		  
+		  <!-- 93 -->
+		  <div ng-switch-when="93"> 
+		  93 - <b>Login</b><br />
+		  Schema for: &lt;93&gt;  - Login <pre>93&lt;UID algorithm&gt;&lt;PWD algorithm&gt;&lt;login user id&gt;&lt;login password&gt;&lt;location code&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>...</pre>
+		  </div>
+		  
+		  <!-- 63 -->
+		  <div ng-switch-when="63"> 
+		  63 - <b>Patron Information</b><br />
+		  Schema for: &lt;93&gt;  - Patron Information <pre>63&lt;language&gt;&lt;transaction date&gt;&lt;summary&gt;&lt;institution id&gt;&lt;patron identifier&gt;&lt;terminal password&gt;&lt;patron password&gt;&lt;start item&gt;&lt;end item&gt;		  </pre>
+		  <br />
+		  Example: <br /> <pre>...</pre>
+		  </div>
+		  
+		  <!-- 35 -->
+		  <div ng-switch-when="35"> 
+		  35 - <b>Fee Paid</b><br />
+		  Schema for: &lt;35&gt;  - Fee Paid <pre>35&lt;transaction date&gt;&lt;institution id&gt;&lt;patron identifier&gt;&lt;terminal password&gt;&lt;patron password&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>...</pre>
+		  </div>
+		  
+		  <!-- 37 -->
+		  <div ng-switch-when="37"> 
+		  37 - <b>Fee Paid</b><br />
+		  Schema for: &lt;37&gt;  - Fee Paid <pre>37&lt;transaction date&gt;&lt;fee type&gt;&lt;payment type&gt;&lt;currency type&gt;&lt;fee amount&gt;&lt;institution id&gt;&lt;patron identifier&gt;&lt;terminal password&gt;&lt;patron password&gt;&lt;fee identifier&gt;&lt;transaction id&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>...</pre>
+		  </div>
+		  
+		  <!-- 17 -->
+		  <div ng-switch-when="17"> 
+		  17 - <b>Item Status Update</b><br />
+		  Schema for: &lt;17&gt;  - Item Status Update <pre>17&lt;transaction date&gt;&lt;institution id&gt;&lt; item identifier &gt;&lt;terminal password&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>...</pre>
+		  </div>
+		  
+		  <!-- 19 -->
+		  <div ng-switch-when="19"> 
+		  19 - <b>Item Status Update</b><br />
+		  Schema for: &lt;19&gt;  - Item Status Update <pre>19&lt;transaction date&gt;&lt;institution id&gt;&lt;item identifier&gt;&lt;terminal password&gt;&lt;item properties&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>...</pre>
+		  </div>
+		  
+		  <!-- 25 -->
+		  <div ng-switch-when="25"> 
+		  25 - <b>Patron Enable</b><br />
+		  Schema for: &lt;25&gt;  - Patron Enable <pre>25&lt;transaction date&gt;&lt;institution id&gt;&lt;patron identifier&gt;&lt;terminal password&gt;&lt;patron password&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>2520150721    091353AOUSM50|AA1908|AY2AZF02F</pre>
+		  </div>
+		  
+		  <!-- 15 -->
+		  <div ng-switch-when="15"> 
+		  15 - <b>Hold</b><br />
+		  Schema for: &lt;15&gt;  - Hold <pre>15&lt;hold mode&gt;&lt;transaction date&gt;&lt;expiration date&gt;&lt;pickup location&gt;&lt;hold type&gt;&lt;institution id&gt;&lt;patron identifier&gt;&lt;patron password&gt;&lt;item identifier&gt;&lt;title identifier&gt;&lt;terminal password&gt;&lt;fee acknowledged&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>15+|20140612    113321|BW20140712    113321|BSLAW||AOUSM50|AA1930|AD1930|ABB48709|||BOY|</pre>
+		  </div>
+		  
+		  <!-- 29 -->
+		  <div ng-switch-when="29"> 
+		  29 - <b>Renew</b><br />
+		  Schema for: &lt;29&gt;  - Renew <pre>29&lt;third party allowed&gt;&lt;no block&gt;&lt;transaction date&gt;&lt;nb due date&gt;&lt;institution id&gt;&lt;patron identifier&gt;&lt;patron password&gt;&lt;item identifier&gt;&lt;title identifier&gt;&lt;terminal password&gt;&lt;item properties&gt;&lt;fee acknowledged&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>...</pre>
+		  </div>
+		  
+		  <!-- 65 -->
+		  <div ng-switch-when="65"> 
+		  65 - <b>Renew All</b><br />
+		  Schema for: &lt;65&gt;  - Renew All <pre>65&lt;transaction date&gt;&lt;institution id&gt;&lt;patron identifier&gt;&lt;patron password&gt;&lt;terminal password&gt;&lt;fee acknowledged&gt;</pre>
+		  <br />
+		  Example: <br /> <pre>...</pre>
+		  </div>
+		  
+	  </div>
+    </div>
+	
+	<!-- Oren Maurer -- colophon  -->
+	<!--  
+	<DIV STYLE="color:white; text-align: center; ">
+	<A HREF="mailto:meorero{%AT#}yahoo.com" STYLE="color:white; text-align: center; font-size: 8pt; border-color: FFFFFF; border-width: 0; ">
+	Oren Maurer </A> 
+	<BR clear="all" />
+	 -->
+
+  </body>
+</html>
+
+</body>
+</html>
